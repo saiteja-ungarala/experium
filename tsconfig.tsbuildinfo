@@ -1,1 +1,0 @@
-{"root":["./src/app.tsx","./src/content.ts","./src/film.ts","./src/main.tsx","./src/components/film.tsx","./src/components/nav.tsx","./src/components/preloader.tsx","./src/components/reveal.tsx","./src/components/chapters/coda.tsx","./src/hooks/usefilm.ts","./src/lib/filmscroll.ts","./src/lib/motion.ts"],"version":"5.6.3"}
