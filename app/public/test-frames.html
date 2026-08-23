@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { background: #333; color: white; display: flex; flex-wrap: wrap; gap: 10px; }
+    div { text-align: center; font-family: sans-serif; }
+    img { width: 150px; height: auto; }
+  </style>
+</head>
+<body>
+  <script>
+    for (let i = 210; i <= 260; i++) {
+      const padded = i.toString().padStart(3, '0');
+      const div = document.createElement('div');
+      div.innerHTML = `<img src="/frames/frame-${padded}.jpg" /><br/>${padded}`;
+      document.body.appendChild(div);
+    }
+  </script>
+</body>
+</html>

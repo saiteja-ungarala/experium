@@ -1,0 +1,17 @@
+# Python
+venv/
+__pycache__/
+
+# Node — app/ has its own .gitignore too; this catches any stray installs
+node_modules/
+
+# Raw drone footage — 16.5 GB, individual files exceed GitHub's 100 MB limit
+Drone shots/
+
+# Frame-extraction scratch folders (zips are kept, their extractions are not)
+frames/extracted/
+frames/temp*/
+
+# OS / editor
+.DS_Store
+Thumbs.db
