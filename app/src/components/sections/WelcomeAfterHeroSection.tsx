@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import { CinematicFrameSequence } from '../hero/CinematicFrameSequence';
 
 export const WelcomeAfterHeroSection: React.FC = () => {

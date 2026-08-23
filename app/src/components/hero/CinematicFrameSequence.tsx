@@ -4,7 +4,7 @@ import { CanvasRenderer } from './CanvasRenderer';
 
 interface CinematicFrameSequenceProps {
   totalFrames: number;
-  scrollContainerRef: React.RefObject<HTMLDivElement>;
+  scrollContainerRef: React.RefObject<HTMLDivElement | null>;
   pathTemplate: (index: number) => string;
   onFrameChange?: (frameIndex: number) => void;
 }

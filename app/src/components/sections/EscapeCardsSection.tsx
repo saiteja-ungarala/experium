@@ -97,8 +97,7 @@ export const EscapeCardsSection: React.FC = () => {
             // idx=2: progress 0.66 to 1.0
             const startProgress = idx * 0.33;
             const endProgress = (idx + 1) * 0.33;
-            const localProgress = Math.max(0, Math.min(1, (progress - startProgress) / (endProgress - startProgress)));
-            
+
             // Fading logic: fade in fast, stay, fade out fast
             let opacity = 0;
             let translateY = 20;

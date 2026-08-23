@@ -3,7 +3,7 @@ import { CinematicFrameSequence } from '../hero/CinematicFrameSequence';
 
 export const FinalCardSequenceSection: React.FC = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [currentFrame, setCurrentFrame] = useState(1);
+  const [, setCurrentFrame] = useState(1);
   const [progress, setProgress] = useState(0);
 
   // Track scroll progress for the final fade
