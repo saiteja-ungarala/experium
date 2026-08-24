@@ -3,9 +3,11 @@ import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface TextStoryLayerProps {
   progress: number;
+  /** 0→1 fade applied to the final stage during the section's end hold zone. */
+  endFade?: number;
 }
 
-export const TextStoryLayer: React.FC<TextStoryLayerProps> = ({ progress }) => {
+export const TextStoryLayer: React.FC<TextStoryLayerProps> = ({ progress, endFade = 0 }) => {
   const isMobile = useIsMobile();
   // We have 5 stages as requested by user.
   // We divide the progress 0.0 - 1.0 into 5 chunks (0.2 each).
@@ -16,21 +18,22 @@ export const TextStoryLayer: React.FC<TextStoryLayerProps> = ({ progress }) => {
   const getStageStyle = (stageIndex: number) => {
     const startProgress = stageIndex * stageDuration;
     const endProgress = (stageIndex + 1) * stageDuration;
-    
+    const isLast = stageIndex === numStages - 1;
+
     // Active if we are in or near this stage
     const isActive = progress >= startProgress && progress <= endProgress;
     const localProgress = (progress - startProgress) / stageDuration; // 0.0 to 1.0 within this stage
-    
+
     let opacity = 0;
-    let transformY = 20; 
+    let transformY = 20;
     let blur = 10;
-    
+
     if (isActive) {
       if (localProgress < 0.2) {
         opacity = localProgress / 0.2;
         transformY = 20 * (1 - opacity);
         blur = 10 * (1 - opacity);
-      } else if (localProgress > 0.8) {
+      } else if (localProgress > 0.8 && !isLast) {
         opacity = (1 - localProgress) / 0.2;
         transformY = -20 * (1 - opacity);
         blur = 10 * (1 - opacity);
@@ -40,7 +43,14 @@ export const TextStoryLayer: React.FC<TextStoryLayerProps> = ({ progress }) => {
         blur = 0;
       }
     }
-    
+
+    // The final stage stays on screen to the very end of the sequence, then
+    // slowly dissolves during the section's hold zone.
+    if (isLast) {
+      opacity *= 1 - endFade;
+      blur = 10 * endFade;
+    }
+
     return {
       opacity,
       transform: `translateY(${transformY}px)`,

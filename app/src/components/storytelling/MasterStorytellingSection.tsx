@@ -34,12 +34,17 @@ export const MasterStorytellingSection: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // The last ~10% of the scroll is a hold zone: the character has reached his
+  // final frame and "Welcome Home" stays on screen, then slowly fades out.
+  const storyProgress = Math.min(1, progress / 0.9);
+  const endFade = progress < 0.92 ? 0 : Math.min(1, (progress - 0.92) / 0.08);
+
   return (
-    <section 
-      ref={containerRef} 
-      style={{ 
-        height: '600vh', 
-        backgroundColor: '#fdf3e1', 
+    <section
+      ref={containerRef}
+      style={{
+        height: '660vh',
+        backgroundColor: '#fdf3e1',
         position: 'relative',
         zIndex: 1
       }}
@@ -113,8 +118,8 @@ export const MasterStorytellingSection: React.FC = () => {
           }} />
         </div>
 
-        <CharacterLayer progress={progress} totalFrames={240} />
-        <TextStoryLayer progress={progress} />
+        <CharacterLayer progress={storyProgress} totalFrames={240} />
+        <TextStoryLayer progress={storyProgress} endFade={endFade} />
 
       </div>
     </section>
