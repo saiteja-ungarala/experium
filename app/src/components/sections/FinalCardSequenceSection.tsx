@@ -180,9 +180,7 @@ export const FinalCardSequenceSection: React.FC = () => {
                   width: '100%',
                   maxWidth: '500px',
                   objectFit: 'contain',
-                  filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))',
-                  // Crop out the checkerboard background
-                  clipPath: 'inset(10% 8% 10% 8% round 20px)'
+                  filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))'
                 }}
               />
             </div>
