@@ -64,17 +64,22 @@ export const Header: React.FC = () => {
 
       {/* Right side placeholder for balance (e.g., Apply) */}
       <div style={{ flex: 1, textAlign: 'right', pointerEvents: 'auto' }}>
-        <button className="header-btn" style={{
-          background: 'none',
-          border: 'none',
-          color: 'inherit',
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: '0.8rem',
-          textTransform: 'uppercase',
-          letterSpacing: '2px',
-          cursor: 'pointer'
-        }}>
-          Apply
+        <button 
+          className="header-btn" 
+          onClick={() => window.dispatchEvent(new Event('open-registration'))}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'inherit',
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: '0.8rem',
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+            cursor: 'pointer',
+            padding: '10px 15px'
+          }}
+        >
+          Register Now
         </button>
       </div>
     </header>

@@ -3,6 +3,8 @@ import { Header } from './components/Header';
 import { Hero } from './components/hero/Hero';
 import { MasterStorytellingSection } from './components/storytelling/MasterStorytellingSection';
 import { MainContent } from './components/sections/MainContent';
+import { FloatingWidgets } from './components/widgets/FloatingWidgets';
+import { RegistrationModal } from './components/widgets/RegistrationModal';
 import './index.css';
 import './responsive.css';
 
@@ -23,6 +25,12 @@ function App() {
 
       {/* Rest of the Content */}
       <MainContent />
+
+      {/* Global Floating Actions (Chatbot, WhatsApp) */}
+      <FloatingWidgets />
+
+      {/* Global Registration Modal */}
+      <RegistrationModal />
     </div>
   );
 }

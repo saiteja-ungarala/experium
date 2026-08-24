@@ -5,8 +5,9 @@ interface HeroContentOverlayProps {
 }
 
 export const HeroContentOverlay: React.FC<HeroContentOverlayProps> = ({ currentFrame }) => {
-  // Experium logic
-  const experiumOpacity = currentFrame > 30 ? Math.max(0, 1 - (currentFrame - 30) / (120 - 30)) : 1;
+  // Experium logic (adjusted for new sequence)
+  // Fades out earlier to prevent overlap with "Entering"
+  const experiumOpacity = currentFrame > 5 ? Math.max(0, 1 - (currentFrame - 5) / (25 - 5)) : 1;
   const experiumScale = 1 + (currentFrame * 0.0015);
   const experiumTranslateY = -(currentFrame * 0.5);
 
@@ -61,7 +62,7 @@ export const HeroContentOverlay: React.FC<HeroContentOverlayProps> = ({ currentF
       // "world" type
       return {
         ...baseStyle,
-        color: '#fdf3e1',
+        color: '#ebd5b3',
         fontFamily: "'Pinyon Script', cursive",
         fontSize: 'clamp(5.5rem, 22vw, 14rem)',
         fontWeight: 'normal',
@@ -71,14 +72,14 @@ export const HeroContentOverlay: React.FC<HeroContentOverlayProps> = ({ currentF
     }
   };
 
-  // "Entering" fades in 110-130, fades out 160-180
-  const word1Style = useMemo(() => getWordStyle(110, 130, 160, 180, 'entering-the'), [currentFrame]);
+  // "Entering" fades in 25-40 (after Experium fades out), fades out 55-70
+  const word1Style = useMemo(() => getWordStyle(25, 40, 55, 70, 'entering-the'), [currentFrame]);
   
-  // "The" fades in 180-190, fades out 220-230 (guaranteed to disappear before garden scene)
-  const word2Style = useMemo(() => getWordStyle(180, 190, 220, 230, 'entering-the'), [currentFrame]);
+  // "The" fades in 70-80 (right after Entering fades out), fades out 105-115
+  const word2Style = useMemo(() => getWordStyle(70, 80, 105, 115, 'entering-the'), [currentFrame]);
   
-  // "World" starts right as garden scene begins (250)
-  const word3Style = useMemo(() => getWordStyle(250, 280, 340, 370, 'world'), [currentFrame]);
+  // "World" starts right as garden scene begins (image 250 -> frame 136)
+  const word3Style = useMemo(() => getWordStyle(140, 160, 230, 250, 'world'), [currentFrame]);
 
   return (
     <div style={{
@@ -92,6 +93,16 @@ export const HeroContentOverlay: React.FC<HeroContentOverlayProps> = ({ currentF
       alignItems: 'center',
     }}>
       
+      {/* Background Dimming for Text Contrast */}
+      <div style={{
+        position: 'absolute',
+        inset: '-20%',
+        background: 'radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 60%)',
+        opacity: experiumOpacity,
+        pointerEvents: 'none',
+        display: experiumOpacity > 0 ? 'block' : 'none'
+      }} />
+
       {/* Brand Text - Phase 0 */}
       <h1 style={{
         position: 'absolute',
@@ -100,11 +111,17 @@ export const HeroContentOverlay: React.FC<HeroContentOverlayProps> = ({ currentF
         margin: 0,
         opacity: experiumOpacity,
         transform: `translateY(${experiumTranslateY}px) scale(${experiumScale})`,
-        color: '#fdf3e1',
-        textShadow: '0 0 30px rgba(253, 243, 225, 0.3), 0 10px 20px rgba(0,0,0,0.8)',
+        background: 'linear-gradient(135deg, #ffffff 0%, #f0d5a3 30%, #d4af37 70%, #ffffff 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        color: 'transparent',
+        filter: 'drop-shadow(0px 12px 24px rgba(0,0,0,0.7)) drop-shadow(0px 4px 8px rgba(0,0,0,0.8))',
         fontWeight: 'normal',
         willChange: 'transform, opacity',
-        display: experiumOpacity > 0 ? 'block' : 'none'
+        display: experiumOpacity > 0 ? 'block' : 'none',
+        lineHeight: 1,
+        padding: '20px' // Prevents shadow clipping
       }}>
         Experium
       </h1>

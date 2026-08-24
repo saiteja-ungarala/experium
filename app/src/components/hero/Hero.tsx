@@ -6,22 +6,28 @@ export const Hero: React.FC = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [currentFrame, setCurrentFrame] = useState(1);
 
-  // Helper to format frame path. Frame names are frame-001.jpg up to 377
+  // Helper to format frame path. 
+  // Frame 1 is the custom herostartingframe.png.
+  // Frames 2+ map to frame-115.jpg onwards.
   const getFramePath = useCallback((index: number) => {
-    const paddedIndex = index.toString().padStart(3, '0');
+    if (index === 1) {
+      return `/frames/herostartingframe.png`;
+    }
+    const actualFrame = index + 113; // index 2 -> 115
+    const paddedIndex = actualFrame.toString().padStart(3, '0');
     return `/frames/frame-${paddedIndex}.jpg`;
   }, []);
 
   // Fade to beige at the end to transition smoothly into the MasterStorytellingSection
-  // Starts fading at frame 340, fully opaque by frame 377.
-  const fadeOutOpacity = currentFrame > 340 ? Math.min(1, (currentFrame - 340) / 37) : 0;
+  // Total frames now 264. Starts fading at frame 227, fully opaque by frame 264.
+  const fadeOutOpacity = currentFrame > 227 ? Math.min(1, (currentFrame - 227) / 37) : 0;
 
   return (
     <div 
       ref={scrollContainerRef}
       style={{ 
-        // 700vh means scrolling ~6 viewport heights to see all 377 frames.
-        height: '700vh', 
+        // 500vh maintains the same scroll speed as 700vh for 377 frames (now 263 frames).
+        height: '500vh', 
         position: 'relative',
         width: '100%',
         backgroundColor: '#000'
@@ -38,7 +44,7 @@ export const Hero: React.FC = () => {
         }}
       >
         <CinematicFrameSequence 
-          totalFrames={377} 
+          totalFrames={264} 
           scrollContainerRef={scrollContainerRef}
           pathTemplate={getFramePath}
           onFrameChange={setCurrentFrame}
