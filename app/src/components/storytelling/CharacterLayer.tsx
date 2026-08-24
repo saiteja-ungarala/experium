@@ -12,70 +12,59 @@ export const CharacterLayer: React.FC<CharacterLayerProps> = ({ progress, totalF
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [loaded, setLoaded] = useState(false);
 
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
-
-  // Don't touch the network until the section is within ~two viewports, so
-  // this 240-frame sequence never competes with the hero's initial load.
+  // Preload all frames
   useEffect(() => {
-    if (shouldLoad) return;
-    const el = wrapperRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) setShouldLoad(true);
-      },
-      { rootMargin: '200% 0px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [shouldLoad]);
-
-  // Preload frames with a small worker pool (in order, 6 at a time) instead
-  // of firing all 240 requests at once. The character appears as soon as the
-  // first chunk is in; the rest keep streaming while the user scrolls.
-  useEffect(() => {
-    if (!shouldLoad) return;
     let isCancelled = false;
     const loadedImages: HTMLImageElement[] = [];
-    const EARLY_SHOW = Math.min(24, totalFrames);
-    let next = 1;
-    let done = 0;
+    let loadedCount = 0;
 
-    const loadIndex = (i: number) =>
-      new Promise<void>((res) => {
-        const paddedIndex = i.toString().padStart(3, '0');
-        const img = new Image();
-        img.onload = () => {
-          loadedImages[i - 1] = img;
-          res();
-        };
-        img.onerror = () => res(); // skip a bad frame rather than block
-        img.src = `/welcome-section-frames-webp/ezgif-frame-${paddedIndex}.webp`;
-      });
-
-    const worker = async () => {
-      while (!isCancelled) {
-        const i = next++;
-        if (i > totalFrames) break;
-        await loadIndex(i);
-        done++;
-        if (done === EARLY_SHOW) {
+    for (let i = 1; i <= totalFrames; i++) {
+      const paddedIndex = i.toString().padStart(3, '0');
+      const pngSrc = `/welcome-section-frames-transparent/ezgif-frame-${paddedIndex}.png`;
+      const jpgSrc = `/welcome-section-frames/ezgif-frame-${paddedIndex}.jpg`;
+      
+      const img = new Image();
+      // Try to load the transparent PNG first (from background removal script)
+      img.src = pngSrc;
+      
+      img.onload = () => {
+        if (isCancelled) return;
+        loadedImages[i - 1] = img;
+        loadedCount++;
+        if (loadedCount === totalFrames) {
           setImages(loadedImages);
           setLoaded(true);
-        } else if (done === totalFrames) {
-          // fresh array reference forces one final redraw with the full set
-          setImages([...loadedImages]);
-          setLoaded(true);
         }
-      }
-    };
-    for (let w = 0; w < 6; w++) worker();
+      };
+      
+      img.onerror = () => {
+        // If PNG fails (not processed yet), fallback to JPG
+        const fallbackImg = new Image();
+        fallbackImg.src = jpgSrc;
+        fallbackImg.onload = () => {
+          if (isCancelled) return;
+          loadedImages[i - 1] = fallbackImg;
+          loadedCount++;
+          if (loadedCount === totalFrames) {
+            setImages(loadedImages);
+            setLoaded(true);
+          }
+        };
+        fallbackImg.onerror = () => {
+          if (isCancelled) return;
+          loadedCount++;
+          if (loadedCount === totalFrames) {
+            setImages(loadedImages);
+            setLoaded(true);
+          }
+        };
+      };
+    }
 
     return () => {
       isCancelled = true;
     };
-  }, [shouldLoad, totalFrames]);
+  }, [totalFrames]);
 
   // Render the correct frame based on progress
   useEffect(() => {
@@ -128,7 +117,7 @@ export const CharacterLayer: React.FC<CharacterLayerProps> = ({ progress, totalF
   const translateX = -travel / 2 + (easedProgress * travel);
 
   return (
-    <div ref={wrapperRef} style={{
+    <div style={{
       position: 'absolute',
       inset: 0,
       pointerEvents: 'none',
