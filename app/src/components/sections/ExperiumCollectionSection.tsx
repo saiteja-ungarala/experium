@@ -107,20 +107,21 @@ export const ExperiumCollectionSection: React.FC = () => {
             const imageX = diff * 50; // pixels
 
             return (
-              <div 
-                key={idx} 
-                style={{ 
-                  width: '100vw', 
-                  height: '100vh', 
+              <div
+                key={idx}
+                className="collection-panel"
+                style={{
+                  width: '100vw',
+                  height: '100vh',
                   display: 'flex',
                   alignItems: 'center',
                   padding: '0 10vw'
                 }}
               >
-                
+
                 {/* Text Content */}
-                <div style={{ 
-                  flex: 1, 
+                <div className="collection-text" style={{
+                  flex: 1,
                   paddingRight: '5vw',
                   display: 'flex',
                   flexDirection: 'column',
@@ -156,7 +157,7 @@ export const ExperiumCollectionSection: React.FC = () => {
                     {item.description}
                   </p>
                   
-                  <div style={{
+                  <div className="collection-explore" style={{
                     marginTop: '50px',
                     display: 'flex',
                     alignItems: 'center',
@@ -173,7 +174,7 @@ export const ExperiumCollectionSection: React.FC = () => {
                 </div>
 
                 {/* Image Reveal Box */}
-                <div style={{
+                <div className="collection-image" style={{
                   flex: 1,
                   height: '60vh',
                   overflow: 'hidden',

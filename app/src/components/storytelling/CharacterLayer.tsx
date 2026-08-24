@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface CharacterLayerProps {
   progress: number; // 0.0 to 1.0
@@ -6,6 +7,7 @@ interface CharacterLayerProps {
 }
 
 export const CharacterLayer: React.FC<CharacterLayerProps> = ({ progress, totalFrames }) => {
+  const isMobile = useIsMobile();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [loaded, setLoaded] = useState(false);
@@ -91,26 +93,28 @@ export const CharacterLayer: React.FC<CharacterLayerProps> = ({ progress, totalF
     requestAnimationFrame(draw);
   }, [progress, loaded, images, totalFrames]);
 
-  // Handle canvas resize
+  // Handle canvas resize. On mobile the character shrinks to the lower
+  // portion of the screen so the story text can live above it.
   useEffect(() => {
     const handleResize = () => {
       if (canvasRef.current) {
-        const vh = window.innerHeight;
-        canvasRef.current.height = vh;
-        canvasRef.current.width = vh;
+        const size = Math.round(window.innerHeight * (isMobile ? 0.52 : 1));
+        canvasRef.current.height = size;
+        canvasRef.current.width = size;
       }
     };
-    
+
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isMobile]);
 
   // Character physical travel logic (X translation)
-  // Interpolate X position: starts left, moves right.
+  // Interpolate X position: starts left, moves right (shorter on mobile).
   const easeInOutQuad = (t: number) => t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
   const easedProgress = easeInOutQuad(progress);
-  const translateX = -25 + (easedProgress * 50);
+  const travel = isMobile ? 22 : 50;
+  const translateX = -travel / 2 + (easedProgress * travel);
 
   return (
     <div style={{
@@ -118,8 +122,9 @@ export const CharacterLayer: React.FC<CharacterLayerProps> = ({ progress, totalF
       inset: 0,
       pointerEvents: 'none',
       display: 'flex',
-      alignItems: 'center',
+      alignItems: isMobile ? 'flex-end' : 'center',
       justifyContent: 'center',
+      paddingBottom: isMobile ? '5vh' : 0,
       zIndex: 5
     }}>
       <canvas

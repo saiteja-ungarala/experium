@@ -1,0 +1,146 @@
+/* ============================================================
+ * Mobile overrides (≤768px, tighter tweaks ≤480px).
+ *
+ * The site is styled inline throughout, so structural changes
+ * (row → column, widths, paddings) land here as class overrides
+ * with !important. Values computed in JS use useIsMobile instead —
+ * keep its breakpoint in sync with this file.
+ * ========================================================== */
+
+@media (max-width: 768px) {
+
+  /* ── Header ── */
+  .site-header {
+    padding: 18px 16px !important;
+  }
+  .site-header .header-logo h1 {
+    font-size: 1.05rem !important;
+    letter-spacing: 3px !important;
+  }
+  .site-header .header-btn {
+    font-size: 0.7rem !important;
+    letter-spacing: 1px !important;
+    padding: 8px 4px !important; /* bigger tap target */
+  }
+
+  /* ── Escape cards: stack image above text ── */
+  .escape-sticky {
+    flex-direction: column !important;
+    padding: 11vh 6vw 4vh !important;
+    gap: 3vh;
+  }
+  .escape-image-col {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: 36vh !important;
+    order: 1;
+  }
+  .escape-text-col {
+    order: 2;
+    width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+  .escape-card {
+    width: 100% !important;
+  }
+  .escape-card-head {
+    margin-bottom: 22px !important;
+  }
+
+  /* ── Experium collection: stack image above text in each panel ── */
+  .collection-panel {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    padding: 11vh 8vw 5vh !important;
+    gap: 4vh;
+  }
+  .collection-image {
+    flex: 0 0 auto !important;
+    height: 32vh !important;
+    order: 1;
+  }
+  .collection-text {
+    order: 2;
+    flex: 0 1 auto !important;
+    padding-right: 0 !important;
+  }
+  .collection-text h2 {
+    /* "Concierge" in Cinzel at the desktop 4rem minimum overflows a 360px
+       screen — cap by viewport width instead. */
+    font-size: clamp(2.4rem, 11vw, 4rem) !important;
+    margin: 0 0 20px 0 !important;
+  }
+  .collection-text p {
+    font-size: 1rem !important;
+  }
+  .collection-explore {
+    margin-top: 28px !important;
+    padding: 6px 0; /* tap target */
+  }
+
+  /* ── Final card sequence: stack card above the info column ── */
+  .final-stage {
+    width: 92% !important;
+    height: auto !important;
+    max-height: 92vh;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 2vh;
+  }
+  .final-card-col h2 {
+    display: none; /* "EXPERIUM" heading is redundant with the card itself */
+  }
+  .final-card-col img {
+    max-width: 300px !important;
+  }
+  .final-info-col {
+    padding-left: 0 !important;
+    align-items: center;
+    text-align: center;
+  }
+  .final-info-col .final-divider {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.2rem !important;
+  }
+  .final-info-col h3 {
+    font-size: clamp(1.7rem, 7vw, 2.5rem) !important;
+    margin-bottom: 0.8rem !important;
+  }
+  .final-info-col p {
+    font-size: 0.95rem !important;
+    margin-bottom: 1.2rem !important;
+  }
+  .final-info-col ul {
+    font-size: 0.9rem !important;
+    gap: 0.55rem !important;
+    text-align: left;
+  }
+  .final-info-col button {
+    margin-top: 1.4rem !important;
+    padding: 0.9rem 2.2rem !important;
+    align-self: center;
+  }
+
+  /* ── Footer ── */
+  .footer-panel {
+    padding: 40px 20px !important;
+  }
+  .footer-links {
+    flex-direction: column !important;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+    margin-top: 40px !important;
+  }
+  .footer-links > div {
+    gap: 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .escape-image-col { height: 32vh !important; }
+  .collection-image { height: 28vh !important; }
+  .final-card-col img { max-width: 250px !important; }
+}

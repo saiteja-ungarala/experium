@@ -67,7 +67,7 @@ export const EscapeCardsSection: React.FC = () => {
         position: 'relative'
       }}
     >
-      <div style={{
+      <div className="escape-sticky" style={{
         position: 'sticky',
         top: 0,
         left: 0,
@@ -78,9 +78,9 @@ export const EscapeCardsSection: React.FC = () => {
         alignItems: 'center',
         padding: '0 5vw'
       }}>
-        
+
         {/* Left Content Column */}
-        <div style={{
+        <div className="escape-text-col" style={{
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
@@ -115,9 +115,10 @@ export const EscapeCardsSection: React.FC = () => {
             }
 
             return (
-              <div 
-                key={idx} 
-                style={{ 
+              <div
+                key={idx}
+                className="escape-card"
+                style={{
                   position: 'absolute',
                   top: '50%',
                   transform: `translateY(calc(-50% + ${translateY}px))`,
@@ -127,7 +128,7 @@ export const EscapeCardsSection: React.FC = () => {
                   width: '80%'
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px' }}>
+                <div className="escape-card-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px' }}>
                   <div>
                     <span style={{ 
                       fontSize: '0.8rem', 
@@ -176,7 +177,7 @@ export const EscapeCardsSection: React.FC = () => {
         </div>
 
         {/* Right Image Column */}
-        <div style={{
+        <div className="escape-image-col" style={{
           flex: 1,
           height: '70vh',
           position: 'relative',

@@ -1,10 +1,12 @@
 import React from 'react';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface TextStoryLayerProps {
   progress: number;
 }
 
 export const TextStoryLayer: React.FC<TextStoryLayerProps> = ({ progress }) => {
+  const isMobile = useIsMobile();
   // We have 5 stages as requested by user.
   // We divide the progress 0.0 - 1.0 into 5 chunks (0.2 each).
   
@@ -85,18 +87,32 @@ export const TextStoryLayer: React.FC<TextStoryLayerProps> = ({ progress }) => {
   // Determine which side the text should be on.
   const isTextRight = progress < 0.5;
 
-  const containerStyle: React.CSSProperties = {
-    position: 'absolute',
-    top: '10%',
-    bottom: '10%',
-    width: '40%',
-    left: isTextRight ? 'auto' : '10%',
-    right: isTextRight ? '10%' : 'auto',
-    transition: 'left 1s ease, right 1s ease, opacity 0.1s linear', 
-    display: 'flex',
-    alignItems: 'center',
-    zIndex: 10
-  };
+  // Mobile: the character occupies the lower half of the screen, so the text
+  // lives full-width in the upper half instead of alternating left/right.
+  const containerStyle: React.CSSProperties = isMobile
+    ? {
+        position: 'absolute',
+        top: '9%',
+        bottom: '52%',
+        width: '88%',
+        left: '6%',
+        right: 'auto',
+        display: 'flex',
+        alignItems: 'center',
+        zIndex: 10
+      }
+    : {
+        position: 'absolute',
+        top: '10%',
+        bottom: '10%',
+        width: '40%',
+        left: isTextRight ? 'auto' : '10%',
+        right: isTextRight ? '10%' : 'auto',
+        transition: 'left 1s ease, right 1s ease, opacity 0.1s linear',
+        display: 'flex',
+        alignItems: 'center',
+        zIndex: 10
+      };
 
   const headingWrapperStyle = {
     display: 'flex',
@@ -105,7 +121,7 @@ export const TextStoryLayer: React.FC<TextStoryLayerProps> = ({ progress }) => {
   };
 
   const textHeadingStyle = {
-    fontSize: 'clamp(2rem, 4vw, 4rem)',
+    fontSize: isMobile ? 'clamp(1.6rem, 7vw, 2.2rem)' : 'clamp(2rem, 4vw, 4rem)',
     fontWeight: 300,
     letterSpacing: '-2px',
     textTransform: 'uppercase' as const,
@@ -114,17 +130,17 @@ export const TextStoryLayer: React.FC<TextStoryLayerProps> = ({ progress }) => {
   };
 
   const scriptStyle = {
-    fontSize: 'clamp(4rem, 8vw, 9rem)',
+    fontSize: isMobile ? 'clamp(2.8rem, 13vw, 4rem)' : 'clamp(4rem, 8vw, 9rem)',
     margin: 0,
     lineHeight: 0.7,
     color: 'var(--text-dark)',
-    marginLeft: '20px',
+    marginLeft: isMobile ? '12px' : '20px',
     whiteSpace: 'nowrap' as const,
   };
 
   const textBodyStyle = {
     fontFamily: 'system-ui, sans-serif',
-    fontSize: 'clamp(1rem, 1.2vw, 1.2rem)',
+    fontSize: isMobile ? '0.95rem' : 'clamp(1rem, 1.2vw, 1.2rem)',
     lineHeight: 1.6,
     color: '#333',
     maxWidth: '400px'

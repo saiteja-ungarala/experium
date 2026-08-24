@@ -51,10 +51,10 @@ export const HeroContentOverlay: React.FC<HeroContentOverlayProps> = ({ currentF
         ...baseStyle,
         color: '#000',
         fontFamily: "'Cinzel', serif",
-        fontSize: '8rem',
+        fontSize: 'clamp(3rem, 13vw, 8rem)',
         fontWeight: '600',
         textTransform: 'uppercase' as const,
-        letterSpacing: '0.8rem',
+        letterSpacing: 'clamp(0.25rem, 1.5vw, 0.8rem)',
         textShadow: '0 0 30px rgba(255,255,255,0.5)',
       };
     } else {
@@ -63,7 +63,7 @@ export const HeroContentOverlay: React.FC<HeroContentOverlayProps> = ({ currentF
         ...baseStyle,
         color: '#fdf3e1',
         fontFamily: "'Pinyon Script', cursive",
-        fontSize: '14rem',
+        fontSize: 'clamp(5.5rem, 22vw, 14rem)',
         fontWeight: 'normal',
         textTransform: 'none' as const,
         textShadow: '0 0 30px rgba(253, 243, 225, 0.3), 0 10px 20px rgba(0,0,0,0.8)',
@@ -96,7 +96,7 @@ export const HeroContentOverlay: React.FC<HeroContentOverlayProps> = ({ currentF
       <h1 style={{
         position: 'absolute',
         fontFamily: "'Pinyon Script', cursive",
-        fontSize: '14rem',
+        fontSize: 'clamp(4.5rem, 20vw, 14rem)',
         margin: 0,
         opacity: experiumOpacity,
         transform: `translateY(${experiumTranslateY}px) scale(${experiumScale})`,

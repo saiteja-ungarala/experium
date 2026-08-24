@@ -16,7 +16,7 @@ export const FooterSection: React.FC = () => {
         }} 
       />
       
-      <div style={{
+      <div className="footer-panel" style={{
         position: 'absolute',
         inset: 0,
         // Softer, more elegant gradient that allows the stars to shine through
@@ -86,10 +86,10 @@ export const FooterSection: React.FC = () => {
         </div>
 
         {/* Footer Links */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          fontSize: '0.7rem', 
+        <div className="footer-links" style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          fontSize: '0.7rem',
           fontFamily: "'Montserrat', sans-serif",
           textTransform: 'uppercase', 
           letterSpacing: '3px',

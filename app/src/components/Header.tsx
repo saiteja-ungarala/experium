@@ -13,7 +13,7 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <header style={{
+    <header className="site-header" style={{
       position: 'fixed',
       top: 0,
       left: 0,
@@ -29,7 +29,7 @@ export const Header: React.FC = () => {
     }}>
       {/* Left side placeholder for balance (e.g., Menu) */}
       <div style={{ flex: 1, pointerEvents: 'auto' }}>
-        <button style={{
+        <button className="header-btn" style={{
           background: 'none',
           border: 'none',
           color: 'inherit',
@@ -44,9 +44,9 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Center Logo */}
-      <div style={{ 
-        flex: 1, 
-        textAlign: 'center', 
+      <div className="header-logo" style={{
+        flex: 1,
+        textAlign: 'center',
         pointerEvents: 'auto',
         opacity: logoReady ? 1 : 0 // Invisible until the Preloader morphs into place and hands off
       }}>
@@ -64,7 +64,7 @@ export const Header: React.FC = () => {
 
       {/* Right side placeholder for balance (e.g., Apply) */}
       <div style={{ flex: 1, textAlign: 'right', pointerEvents: 'auto' }}>
-        <button style={{
+        <button className="header-btn" style={{
           background: 'none',
           border: 'none',
           color: 'inherit',

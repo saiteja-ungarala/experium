@@ -86,23 +86,25 @@ export const FinalCardSequenceSection: React.FC = () => {
             fontWeight: 400,
             color: '#fdf3e1',
             textTransform: 'uppercase',
-            letterSpacing: '8px',
+            letterSpacing: 'clamp(3px, 1.2vw, 8px)',
             margin: '0 0 20px 0',
             textShadow: '0 10px 30px rgba(0,0,0,0.8)',
-            textAlign: 'center'
+            textAlign: 'center',
+            padding: '0 16px'
           }}>
             The Invitation
           </h2>
           <p style={{
             fontFamily: "'Montserrat', sans-serif",
-            fontSize: '1.2rem',
+            fontSize: 'clamp(0.85rem, 2.5vw, 1.2rem)',
             color: 'rgba(253, 243, 225, 0.8)',
-            letterSpacing: '4px',
+            letterSpacing: 'clamp(2px, 0.8vw, 4px)',
             textTransform: 'uppercase',
             maxWidth: '600px',
             textAlign: 'center',
             lineHeight: 1.6,
-            textShadow: '0 4px 10px rgba(0,0,0,0.8)'
+            textShadow: '0 4px 10px rgba(0,0,0,0.8)',
+            padding: '0 24px'
           }}>
             An exclusive symbol of prestige. Reserved only for the visionary few.
           </p>
@@ -146,7 +148,7 @@ export const FinalCardSequenceSection: React.FC = () => {
             EXPERIUM
           </div>
 
-          <div style={{
+          <div className="final-stage" style={{
             display: 'flex',
             width: '80%',
             height: '80%',
@@ -154,7 +156,7 @@ export const FinalCardSequenceSection: React.FC = () => {
             justifyContent: 'space-between'
           }}>
             {/* Card on Left */}
-            <div style={{
+            <div className="final-card-col" style={{
               flex: 1,
               display: 'flex',
               flexDirection: 'column',
@@ -186,7 +188,7 @@ export const FinalCardSequenceSection: React.FC = () => {
             </div>
 
             {/* Info on Right */}
-            <div style={{
+            <div className="final-info-col" style={{
               flex: 1,
               paddingLeft: '4rem',
               display: 'flex',
@@ -206,7 +208,7 @@ export const FinalCardSequenceSection: React.FC = () => {
                 <span className="script-font" style={{ fontSize: '1.2em', textTransform: 'none', marginLeft: '10px' }}>Club Now</span>
               </h3>
               
-              <div style={{
+              <div className="final-divider" style={{
                 width: '50px',
                 height: '2px',
                 backgroundColor: 'var(--text-dark)',

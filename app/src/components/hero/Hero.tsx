@@ -69,9 +69,9 @@ export const Hero: React.FC = () => {
           }} />
           <h2 style={{
             fontFamily: "'Cinzel', serif",
-            fontSize: '1.5rem',
+            fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
             fontWeight: 400,
-            letterSpacing: '8px',
+            letterSpacing: 'clamp(4px, 1.5vw, 8px)',
             textTransform: 'uppercase',
             color: 'var(--text-dark)',
             margin: 0

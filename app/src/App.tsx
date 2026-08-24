@@ -4,6 +4,7 @@ import { Hero } from './components/hero/Hero';
 import { MasterStorytellingSection } from './components/storytelling/MasterStorytellingSection';
 import { MainContent } from './components/sections/MainContent';
 import './index.css';
+import './responsive.css';
 
 function App() {
   return (
