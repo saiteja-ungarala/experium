@@ -5,8 +5,11 @@ import { HeroContentOverlay } from './HeroContentOverlay';
 export const Hero: React.FC = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [currentFrame, setCurrentFrame] = useState(1);
+  const [seqReady, setSeqReady] = useState(false);
 
   // Helper to format frame path. Frame names are frame-001.jpg up to 377
+  // (kept as JPG: these sources are already heavily compressed and re-encoding
+  // them to WebP more than doubled their size)
   const getFramePath = useCallback((index: number) => {
     const paddedIndex = index.toString().padStart(3, '0');
     return `/frames/frame-${paddedIndex}.jpg`;
@@ -37,13 +40,17 @@ export const Hero: React.FC = () => {
           overflow: 'hidden'
         }}
       >
-        <CinematicFrameSequence 
-          totalFrames={377} 
+        <CinematicFrameSequence
+          totalFrames={377}
           scrollContainerRef={scrollContainerRef}
           pathTemplate={getFramePath}
           onFrameChange={setCurrentFrame}
+          eager
+          onReady={() => setSeqReady(true)}
         />
-        <HeroContentOverlay currentFrame={currentFrame} />
+        {/* Held back until the sequence is ready so the title never overlaps
+            the loading indicator */}
+        {seqReady && <HeroContentOverlay currentFrame={currentFrame} />}
 
         {/* Transition Overlay */}
         <div style={{

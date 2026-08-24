@@ -3,7 +3,7 @@ export class FramePreloader {
   private totalFrames: number;
   private pathTemplate: (index: number) => string;
   private preloadQueue: number[] = [];
-  private loading: boolean = false;
+  private startPromise: Promise<void> | null = null;
   private onProgressCallback?: (progress: number) => void;
   private framesLoaded: number = 0;
 
@@ -25,19 +25,34 @@ export class FramePreloader {
     return this.cache.get(index);
   }
 
-  public startPreloading(priorityFrames: number = 10): Promise<void> {
-    return new Promise((resolve) => {
-      if (this.loading) {
-        resolve();
-        return;
-      }
-      this.loading = true;
+  /** The requested frame, or the nearest loaded one (preferring earlier
+   *  frames), so a fast scroll ahead of the loader shows a close frame
+   *  instead of a black screen. */
+  public getNearestFrame(index: number): HTMLImageElement | undefined {
+    const exact = this.cache.get(index);
+    if (exact) return exact;
+    for (let i = index - 1; i >= 1; i--) {
+      const img = this.cache.get(i);
+      if (img) return img;
+    }
+    for (let i = index + 1; i <= this.totalFrames; i++) {
+      const img = this.cache.get(i);
+      if (img) return img;
+    }
+    return undefined;
+  }
 
+  public startPreloading(priorityFrames: number = 10): Promise<void> {
+    // Idempotent: repeat calls (e.g. React StrictMode's double effect run)
+    // get the ORIGINAL promise, which resolves only once the priority frames
+    // have genuinely loaded — never an instantly-resolved duplicate.
+    if (this.startPromise) return this.startPromise;
+
+    this.startPromise = new Promise((resolve) => {
       let initialLoadCount = 0;
-      
+
       const loadNext = () => {
         if (this.preloadQueue.length === 0) {
-          this.loading = false;
           return;
         }
 
@@ -83,5 +98,6 @@ export class FramePreloader {
         loadNext();
       }
     });
+    return this.startPromise;
   }
 }

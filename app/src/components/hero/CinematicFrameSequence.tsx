@@ -7,22 +7,47 @@ interface CinematicFrameSequenceProps {
   scrollContainerRef: React.RefObject<HTMLDivElement | null>;
   pathTemplate: (index: number) => string;
   onFrameChange?: (frameIndex: number) => void;
+  /** Start downloading immediately (the hero). Defaults to lazy: loading
+   *  begins only when the section scrolls within two viewports, so
+   *  below-fold sequences don't starve the hero of connections. */
+  eager?: boolean;
+  onReady?: () => void;
 }
 
-export const CinematicFrameSequence: React.FC<CinematicFrameSequenceProps> = ({ 
-  totalFrames, 
+export const CinematicFrameSequence: React.FC<CinematicFrameSequenceProps> = ({
+  totalFrames,
   scrollContainerRef,
   pathTemplate,
-  onFrameChange
+  onFrameChange,
+  eager = false,
+  onReady
 }) => {
   const [isReady, setIsReady] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(eager);
   const [currentFrameIndex, setCurrentFrameIndex] = useState(1);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [loadingProgress, setLoadingProgress] = useState(0);
 
   const preloader = useMemo(() => new FramePreloader(totalFrames, pathTemplate), [totalFrames, pathTemplate]);
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
+  const onReadyRef = useRef(onReady);
+  onReadyRef.current = onReady;
+
+  // Lazy instances wait until their section approaches the viewport.
+  useEffect(() => {
+    if (shouldLoad) return;
+    const el = scrollContainerRef.current ?? containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) setShouldLoad(true);
+      },
+      { rootMargin: '200% 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [shouldLoad, scrollContainerRef]);
 
   // Track container resize for canvas dimensions
   useEffect(() => {
@@ -50,13 +75,15 @@ export const CinematicFrameSequence: React.FC<CinematicFrameSequenceProps> = ({
     };
   }, []);
 
-  // Initialize preloader
+  // Initialize preloader once loading is allowed
   useEffect(() => {
+    if (!shouldLoad) return;
     preloader.setOnProgress(setLoadingProgress);
     preloader.startPreloading(20).then(() => {
       setIsReady(true);
+      onReadyRef.current?.();
     });
-  }, [preloader]);
+  }, [preloader, shouldLoad]);
 
   // Handle scroll logic
   useEffect(() => {
@@ -107,7 +134,7 @@ export const CinematicFrameSequence: React.FC<CinematicFrameSequenceProps> = ({
     };
   }, [scrollContainerRef, totalFrames, onFrameChange]);
 
-  const currentImage = preloader.getFrame(currentFrameIndex);
+  const currentImage = preloader.getNearestFrame(currentFrameIndex);
 
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', backgroundColor: 'transparent' }}>
