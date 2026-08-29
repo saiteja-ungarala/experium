@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Preloader } from './components/Preloader';
 import { Header } from './components/Header';
 import { Hero } from './components/hero/Hero';
