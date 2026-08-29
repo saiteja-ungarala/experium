@@ -6,8 +6,8 @@ interface HeroContentOverlayProps {
 
 export const HeroContentOverlay: React.FC<HeroContentOverlayProps> = ({ currentFrame }) => {
   // Experium logic (adjusted for new sequence)
-  // Fades out earlier to prevent overlap with "Entering"
-  const experiumOpacity = currentFrame > 5 ? Math.max(0, 1 - (currentFrame - 5) / (25 - 5)) : 1;
+  // Fades out later so it survives slight scroll-downs
+  const experiumOpacity = currentFrame > 20 ? Math.max(0, 1 - (currentFrame - 20) / (40 - 20)) : 1;
   const experiumScale = 1 + (currentFrame * 0.0015);
   const experiumTranslateY = -(currentFrame * 0.5);
 
@@ -72,14 +72,14 @@ export const HeroContentOverlay: React.FC<HeroContentOverlayProps> = ({ currentF
     }
   };
 
-  // "Entering" fades in 25-40 (after Experium fades out), fades out 55-70
-  const word1Style = useMemo(() => getWordStyle(25, 40, 55, 70, 'entering-the'), [currentFrame]);
+  // "Entering" fades in 50-65 (after Experium fades out), fades out 80-95
+  const word1Style = useMemo(() => getWordStyle(50, 65, 80, 95, 'entering-the'), [currentFrame]);
   
-  // "The" fades in 70-80 (right after Entering fades out), fades out 105-115
-  const word2Style = useMemo(() => getWordStyle(70, 80, 105, 115, 'entering-the'), [currentFrame]);
+  // "The" fades in 95-105 (right after Entering fades out), fades out 130-140
+  const word2Style = useMemo(() => getWordStyle(95, 105, 130, 140, 'entering-the'), [currentFrame]);
   
-  // "World" starts right as garden scene begins (image 250 -> frame 136)
-  const word3Style = useMemo(() => getWordStyle(140, 160, 230, 250, 'world'), [currentFrame]);
+  // "World" starts right as garden scene begins
+  const word3Style = useMemo(() => getWordStyle(150, 170, 230, 250, 'world'), [currentFrame]);
 
   return (
     <div style={{

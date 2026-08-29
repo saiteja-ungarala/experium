@@ -69,6 +69,7 @@ export const Preloader: React.FC = () => {
           fontSize: isMorphing ? '1.5rem' : 'clamp(2rem, 5vw, 4rem)',
           fontWeight: isMorphing ? 400 : 300,
           letterSpacing: isMorphing ? '6px' : '15px',
+          textShadow: '0 2px 10px rgba(0,0,0,0.5)',
           
           transition: 'all 1.2s cubic-bezier(0.77, 0, 0.175, 1)',
           animation: isMorphing ? 'none' : 'preloaderPulse 2s infinite alternate, preloaderTrack 2.5s ease-out forwards'

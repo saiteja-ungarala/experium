@@ -11,7 +11,6 @@ export const Header: React.FC = () => {
     }, 3700);
     return () => clearTimeout(timer);
   }, []);
-
   return (
     <header className="site-header" style={{
       position: 'fixed',
@@ -48,7 +47,8 @@ export const Header: React.FC = () => {
         flex: 1,
         textAlign: 'center',
         pointerEvents: 'auto',
-        opacity: logoReady ? 1 : 0 // Invisible until the Preloader morphs into place and hands off
+        opacity: logoReady ? 1 : 0,
+        transition: 'opacity 0.5s ease'
       }}>
         <h1 style={{
           fontFamily: "'Cinzel', serif",
