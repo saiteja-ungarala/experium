@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { restoreSavedScroll } from '../utils/scrollRestore';
 
 export const Preloader: React.FC = () => {
   const [isMorphing, setIsMorphing] = useState(false);
@@ -11,6 +12,10 @@ export const Preloader: React.FC = () => {
     const timer = setTimeout(() => {
       setIsMorphing(true);
       document.body.style.overflow = 'auto';
+
+      // Put the page back where it was reloaded. Done here, while the curtain
+      // still covers the viewport, so the jump is never visible.
+      restoreSavedScroll();
 
       // 1.2 seconds for the morph animation to complete
       setTimeout(() => {

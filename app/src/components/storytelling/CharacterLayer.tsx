@@ -6,6 +6,17 @@ interface CharacterLayerProps {
   totalFrames: number;
 }
 
+/** Closest frame we already hold, so the canvas is never blank mid-stream. */
+const nearestLoaded = (list: HTMLImageElement[], index: number) => {
+  for (let radius = 1; radius <= list.length; radius++) {
+    const before = list[index - radius];
+    if (before) return before;
+    const after = list[index + radius];
+    if (after) return after;
+  }
+  return undefined;
+};
+
 export const CharacterLayer: React.FC<CharacterLayerProps> = ({ progress, totalFrames }) => {
   const isMobile = useIsMobile();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -17,6 +28,15 @@ export const CharacterLayer: React.FC<CharacterLayerProps> = ({ progress, totalF
     let isCancelled = false;
     const loadedImages: HTMLImageElement[] = [];
     let loadedCount = 0;
+
+    // Publish as frames arrive rather than only at 100%: a reload inside this
+    // section would otherwise show no character at all until all 240 are in.
+    const publish = () => {
+      if (loadedCount === totalFrames || loadedCount % 12 === 0) {
+        setImages([...loadedImages]);
+        setLoaded(true);
+      }
+    };
 
     for (let i = 1; i <= totalFrames; i++) {
       const paddedIndex = i.toString().padStart(3, '0');
@@ -31,10 +51,7 @@ export const CharacterLayer: React.FC<CharacterLayerProps> = ({ progress, totalF
         if (isCancelled) return;
         loadedImages[i - 1] = img;
         loadedCount++;
-        if (loadedCount === totalFrames) {
-          setImages(loadedImages);
-          setLoaded(true);
-        }
+        publish();
       };
       
       img.onerror = () => {
@@ -45,18 +62,12 @@ export const CharacterLayer: React.FC<CharacterLayerProps> = ({ progress, totalF
           if (isCancelled) return;
           loadedImages[i - 1] = fallbackImg;
           loadedCount++;
-          if (loadedCount === totalFrames) {
-            setImages(loadedImages);
-            setLoaded(true);
-          }
+          publish();
         };
         fallbackImg.onerror = () => {
           if (isCancelled) return;
           loadedCount++;
-          if (loadedCount === totalFrames) {
-            setImages(loadedImages);
-            setLoaded(true);
-          }
+          publish();
         };
       };
     }
@@ -77,7 +88,7 @@ export const CharacterLayer: React.FC<CharacterLayerProps> = ({ progress, totalF
     let frameIndex = Math.floor(progress * (totalFrames - 1));
     frameIndex = Math.max(0, Math.min(frameIndex, totalFrames - 1));
     
-    const img = images[frameIndex];
+    const img = images[frameIndex] ?? nearestLoaded(images, frameIndex);
     if (!img) return;
 
     const draw = () => {

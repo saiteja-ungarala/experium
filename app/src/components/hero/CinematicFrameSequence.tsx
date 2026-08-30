@@ -87,6 +87,13 @@ export const CinematicFrameSequence: React.FC<CinematicFrameSequenceProps> = ({
             if (frameIndex > totalFrames) frameIndex = totalFrames;
             if (frameIndex < 1) frameIndex = 1;
             
+            // Landed on a frame that has not been fetched yet (a reload deep
+            // in the page, or a fast scrub): pull that neighbourhood to the
+            // front of the queue so the sequence catches up here, not at 1.
+            if (!preloader.getFrame(frameIndex)) {
+              preloader.prioritizeAround(frameIndex);
+            }
+
             setCurrentFrameIndex(frameIndex);
             if (onFrameChange) {
               onFrameChange(frameIndex);
@@ -105,9 +112,9 @@ export const CinematicFrameSequence: React.FC<CinematicFrameSequenceProps> = ({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [scrollContainerRef, totalFrames, onFrameChange]);
+  }, [scrollContainerRef, totalFrames, onFrameChange, preloader]);
 
-  const currentImage = preloader.getFrame(currentFrameIndex);
+  const currentImage = preloader.getNearestFrame(currentFrameIndex);
 
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', backgroundColor: 'transparent' }}>

@@ -25,6 +25,38 @@ export class FramePreloader {
     return this.cache.get(index);
   }
 
+  /**
+   * The closest frame we actually hold. The queue fills in order, so a jump
+   * deep into the sequence (a reload part-way down the page, a fast scrub)
+   * asks for a frame that has not arrived yet; returning the nearest one keeps
+   * a real image on screen instead of leaving the canvas blank.
+   */
+  public getNearestFrame(index: number): HTMLImageElement | undefined {
+    const exact = this.cache.get(index);
+    if (exact) return exact;
+
+    let best: HTMLImageElement | undefined;
+    let bestDistance = Infinity;
+    this.cache.forEach((img, i) => {
+      const distance = Math.abs(i - index);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = img;
+      }
+    });
+    return best;
+  }
+
+  /**
+   * Re-orders whatever is still queued so the frames around `index` load first.
+   * Without this a reload half-way down the page waits for every earlier frame
+   * to download before the one actually on screen is fetched.
+   */
+  public prioritizeAround(index: number) {
+    if (this.preloadQueue.length < 2) return;
+    this.preloadQueue.sort((a, b) => Math.abs(a - index) - Math.abs(b - index));
+  }
+
   public startPreloading(priorityFrames: number = 10): Promise<void> {
     return new Promise((resolve) => {
       if (this.loading) {
